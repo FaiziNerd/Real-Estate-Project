@@ -5,6 +5,7 @@ import './App.css'
 import { Route,Routes } from 'react-router-dom'
 import Header from './components/Header'
 import Home from './pages/Home'
+import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 import SignOut from './pages/SignOut'
 import About from './pages/About'
@@ -22,7 +23,8 @@ function App() {
       <Route path='/' element = {<Home/>}/>
       <Route path='/profile' element = {<Profile/>}/>
       <Route path='/about' element = {<About/>}/>
-      <Route path='/sign-in' element = {<SignIn/>}/>
+       <Route path='/sign-in' element = {<SignIn/>}/>
+      <Route path='/sign-up' element = {<SignUp/>}/>
       <Route path='/sign-out' element = {<SignOut/>}/>
       </Routes>
     </>
