@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
   import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import OAuth from "../components/OAuth"
 
 
   function SignUp()
@@ -77,7 +78,7 @@ import { Link, useNavigate } from "react-router-dom"
         <button  disabled={loading} className="bg-slate-700 text-white p-3
         rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
           {loading ? "Loading!!.." : "SignUp"}</button>
-
+          <OAuth/>
 
       </form>
 

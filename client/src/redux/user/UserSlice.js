@@ -1,42 +1,37 @@
-/* eslint-disable no-unused-vars */
-
 import { createSlice } from "@reduxjs/toolkit";
 
-const InitialState = {
+const initialState = {
     currentUser: null,
     error: null,
     loading: false
-
-}
-
+};
 
 const userSlice = createSlice({
-    name: 'user',
-    InitialState,
-    reducers:
-    {
-     signInStart: (state)=> {
-        state.loading = true;
-     },
-     signInSuccess: (state,action) =>
-     {
-        state.currentUser =  action.payload
-        state.loading     = false;
-        state.error       = null;    
-    },
-    signInFailure: (state,action) =>
-    {
-        state.error = action.payload
-        state.loading =  false;
+    name: "user",
+    initialState,
+
+    reducers: {
+        signInStart: (state) => {
+            state.loading = true;
+        },
+
+        signInSuccess: (state, action) => {
+            state.currentUser = action.payload;
+            state.loading = false;
+            state.error = null;
+        },
+
+        signInFailure: (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        }
     }
-    }
+});
 
+export const {
+    signInStart,
+    signInFailure,
+    signInSuccess
+} = userSlice.actions;
 
-
-    
-
-})
-
-export const {signInStart, signInFailure, signInSuccess} = userSlice.actions
-
-export default userSlice.reducer
+export default userSlice.reducer;
