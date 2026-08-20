@@ -5,9 +5,11 @@ import  { signInWithPopup, GoogleAuthProvider,getAuth } from 'firebase/auth'
 import { app } from '../firebase'
 import { useDispatch } from 'react-redux'
 import { signInSuccess } from '../redux/user/UserSlice'
+import { useNavigate } from 'react-router-dom'
 function OAuth() {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
    
 
    async function handleGoogleClick ()
@@ -31,6 +33,8 @@ function OAuth() {
 
         const data = await res.json()
         dispatch(signInSuccess(data))
+        navigate('/')
+        
         console.log(data)
 
     } catch (error) {
