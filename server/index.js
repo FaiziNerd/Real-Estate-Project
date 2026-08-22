@@ -4,10 +4,13 @@ import { ConnectDB } from "./config/db.config.js"
 import User from "./models/user.model.js"
 import UserRouter from "./routes/user.route.js"
 import authRouter from "./routes/auth.route.js"
+import cookieParser from "cookie-parser"
+
 
 dotenv.config()
 const app = express()
 app.use(express.json())
+app.use(cookieParser())
 ConnectDB()
 
 
