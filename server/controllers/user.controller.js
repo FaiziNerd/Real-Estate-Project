@@ -1,8 +1,74 @@
-const test = (req,res)=>
+ import uploadToCloudinary from '../utils/uploadToCloudinary.js'
+ import bcrypt from 'bcrypt'
+ import { errorhandler } from '../utils/error.js'
+ import User from '../models/user.model.js'
+ 
+ 
+export const test = (req,res)=>
 {
     res.json({
         message: "Api route is working"
     })
 }
 
-export default test
+
+export const updateUserInfo =  async (req,res,next) =>
+{
+    try {
+        const userId =
+          req.userId ||
+          req.user?.id ||
+          req.user?._id?.$oid ||
+          req.user?._id
+
+        const user = await User.findById(userId)
+
+        if(!user)
+        {
+            return next(errorhandler(404, 'User not Found'))
+        }
+
+        if(req.body.username)
+        {
+            user.username = req.body.username;
+        }
+
+        if(req.body.email)
+        {
+            user.email = req.body.email
+        }
+
+        if(req.body.password)
+        {
+            user.password = bcrypt.hashSync(req.body.password,10)
+        }
+
+        if(req.file)
+        {
+            const hasCloudinaryConfig =
+                process.env.CLOUDINARY_CLOUD_NAME &&
+                process.env.CLOUDINARY_API_KEY &&
+                process.env.CLOUDINARY_API_SECRET
+
+            if (hasCloudinaryConfig) {
+                try {
+                    const result = await uploadToCloudinary(req.file.buffer)
+                    user.avatar = result.secure_url
+                } catch (uploadError) {
+                    console.error("Cloudinary upload failed:", uploadError.message)
+                }
+            }
+        }
+
+
+        await user.save()
+
+        const {password:pass, ...rest} = user._doc
+
+        res.status(200).json(rest)
+
+
+    } catch (error) {
+        next(error)
+    }
+}
