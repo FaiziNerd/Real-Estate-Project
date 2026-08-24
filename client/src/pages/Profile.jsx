@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import { useSelector, useDispatch } from "react-redux"
 import { useRef, useState } from "react"
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess } from "../redux/user/UserSlice"
 
 
 function Profile ()
@@ -93,6 +94,34 @@ function Profile ()
      }
     }
 
+
+    async function handleDeleteUser()
+    {
+       try {
+        dispatch(deleteUserStart())
+
+        const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+           credentials: "include",
+            method: "DELETE"
+        })
+
+        const data = await res.json()
+
+        if(data.success === false)
+        {
+            dispatch(deleteUserFailure(data.message))
+            return 
+        }
+
+        dispatch(deleteUserSuccess(data))
+
+
+
+       } catch (error) {
+        dispatch(deleteUserFailure(error.message))
+       }
+    }
+
 return (
     <div className="p-3 max-w-lg mx-auto">
         <h1 className="text-3xl font-semibold text-center
@@ -104,15 +133,15 @@ return (
             className="rounded-full h-24 w-24 object-cover cursor-pointer self-center
             " />
 
-            <input value={FormData.username} type="text" placeholder="username" id="username"
+            <input value={FormDataState.username} type="text" placeholder="username" id="username"
             className = "border p-3 rounded-lg bg-white" onChange={handleChange}/>
 
 
-            <input value={FormData.email} type="email" placeholder="email" id="email"
+            <input value={FormDataState.email} type="email" placeholder="email" id="email"
             className = "border p-3 rounded-lg bg-white" onChange={handleChange}/>
 
 
-             <input  value = {FormData.password} type="password" placeholder="password" id="password"
+             <input  value = {FormDataState.password} type="password" placeholder="password" id="password"
             className = "border p-3 rounded-lg bg-white" onChange={handleChange}/>
 
             <button disabled={loading} type = "submit" className="bg-slate-700 p-3 text-white rounded-lg
@@ -125,7 +154,7 @@ return (
         </form>
 
         <div className="flex justify-between mt-5">
-            <span className="text-red-700 cursor-pointer">Delete Account</span>
+            <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</span>
             <span className="text-red-700 cursor-pointer">Sign Out</span>
 
         </div>
