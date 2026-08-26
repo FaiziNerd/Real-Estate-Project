@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import { useSelector, useDispatch } from "react-redux"
 import { useRef, useState } from "react"
-import { deleteUserFailure, deleteUserStart, deleteUserSuccess } from "../redux/user/UserSlice"
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserStart } from "../redux/user/UserSlice"
 
 
 function Profile ()
@@ -122,6 +122,24 @@ function Profile ()
        }
     }
 
+    const handleSignOut = async () =>
+    {
+      try {
+        dispatch(signOutUserStart())
+        const res = await fetch(`/api/auth/signout`)
+        const data = await res.json()
+        if(data.sucess === false)
+        {
+            dispatch(deleteUserFailure(data.message))
+        }
+
+        dispatch(deleteUserSuccess(data))
+        return 
+      } catch (error) {
+        dispatch(deleteUserFailure(data.message))
+      }
+    }
+
 return (
     <div className="p-3 max-w-lg mx-auto">
         <h1 className="text-3xl font-semibold text-center
@@ -155,7 +173,7 @@ return (
 
         <div className="flex justify-between mt-5">
             <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</span>
-            <span className="text-red-700 cursor-pointer">Sign Out</span>
+            <span onClick = {handleSignOut} className="text-red-700 cursor-pointer">Sign Out</span>
 
         </div>
 
