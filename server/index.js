@@ -5,6 +5,7 @@ import User from "./models/user.model.js"
 import UserRouter from "./routes/user.route.js"
 import authRouter from "./routes/auth.route.js"
 import cookieParser from "cookie-parser"
+import listingRouter from "./routes/listing.route.js"
 
 
 dotenv.config()
@@ -18,6 +19,7 @@ const PORT = process.env.PORT
 
 app.use('/api/user',UserRouter)
 app.use('/api/auth', authRouter)
+app.use('api/listing', listingRouter)
 
 
 app.use((err,req,res,next)=>{
