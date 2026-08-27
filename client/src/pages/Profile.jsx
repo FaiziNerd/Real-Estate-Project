@@ -3,7 +3,7 @@
 import { useSelector, useDispatch } from "react-redux"
 import { useRef, useState } from "react"
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserStart } from "../redux/user/UserSlice"
-
+import {Link} from "react-router-dom"
 
 function Profile ()
 {
@@ -164,6 +164,11 @@ return (
 
             <button disabled={loading} type = "submit" className="bg-slate-700 p-3 text-white rounded-lg
             hover:opacity-95 disbaled: opacity-80">{loading ? "UPDATING" : "UPDATE"}</button>
+
+            <Link  className="bg-green-700 text-white p-3 rounded-lg
+            uppercase text-center hover: opacity-95" to= {"/create-listing"}>
+            Create Listing
+            </Link>
 
             {error && (
                 <p className="text-red-500">{error}</p>
