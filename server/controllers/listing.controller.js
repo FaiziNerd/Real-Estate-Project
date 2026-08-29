@@ -32,3 +32,26 @@ export const getUserListings = async (req,res,next)=>
     return next(errorhandler(401, "You can create your listings!!"))
    }
 }
+
+
+export const deleteuserListings = async (req,res,next) =>
+{
+   const listing = await Listing.findById(req.params.id)
+
+   if(!listing)
+   {
+    return next(errorhandler(404, "Listing not Found"))
+   }
+
+   if(req.user.id !== listing.userRef)
+   {
+    return next(errorhandler(401,"You can delete your own listings"))
+   }
+
+   try {
+    await listing.findByIdAndDelete(req.params.id)
+    
+   } catch (error) {
+      next(error)
+   }
+}
