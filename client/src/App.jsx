@@ -13,6 +13,7 @@ import Profile from './pages/Profile'
 import PrivateRoute from './components/PrivateRoute'
 import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
+import Listing from './pages/Listing'
 
 
 
@@ -33,6 +34,8 @@ function App() {
       <Route path='/sign-in' element = {<SignIn/>}/>
       <Route path='/sign-up' element = {<SignUp/>}/>
       <Route path='/sign-out' element = {<SignOut/>}/>
+        <Route path='/listing/:listingId' element = {<Listing/>}/>
+
       </Routes>
     </>
   )
