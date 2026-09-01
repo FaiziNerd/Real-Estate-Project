@@ -7,7 +7,7 @@ import { errorhandler } from "../utils/error.js"
 export const createListing = async (req,res,next)=>
 {
     try {
-        const listing = Listing.create(req.body)
+        const listing = await Listing.create(req.body)
         return res.status(200).json(listing)
     } catch (error) {
         next(error)
@@ -77,6 +77,24 @@ export const updateuserListings = async (req,res,next)=>
             {new: true}
         )
         res.status(200).json(updatedListing)
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const getListing = async (req,res,next) =>
+{
+    try {
+        const listing = Listing.findById(req.params.id)
+
+        if(!listing)
+        {
+            return next(errorhandler(404,"Listing is not found"))
+        }
+
+        res.status(200).json(listing)
+
     } catch (error) {
         next(error)
     }
