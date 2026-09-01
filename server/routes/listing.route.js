@@ -3,7 +3,7 @@ import express from "express"
 import { createListing } from "../controllers/listing.controller.js"
 import { deleteuserListings } from "../controllers/listing.controller.js"
 import { updateuserListings } from "../controllers/listing.controller.js"
-import {getListing} from '"../controllers/listing.controller.js"'
+import {getListing} from "../controllers/listing.controller.js"
 
 
 const router = express.Router()

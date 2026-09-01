@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 
 function CreateListing() {
@@ -10,6 +11,7 @@ function CreateListing() {
   const [imageUploadError,setimageUploadError] = useState(false)
   const [files,setFiles] = useState([])
   const navigate = useNavigate()
+  const { currentUser } = useSelector((state) => state.user)
   
 
   const [formData, setFormData] = useState({
@@ -72,23 +74,29 @@ function CreateListing() {
       setError(false);
       setLoading(true);
 
-      const res = await fetch(`/api/listings/create`, {
+      const res = await fetch(`/api/listing/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        credentials: 'include',
+        body: JSON.stringify({
+          ...formData,
+          userRef: currentUser._id,
+        }),
       });
 
       const data = await res.json();
       setLoading(false);
 
       if (data.success === false) {
-        
         setError(data.message);
+        return
       }
 
-      navigate(`/listing/${data._id}`)
+      if (data._id) {
+        navigate(`/listing/${data._id}`)
+      }
 
     } catch (err) {
       setError(err.message);

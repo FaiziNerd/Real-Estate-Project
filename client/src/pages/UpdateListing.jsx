@@ -73,11 +73,12 @@ function UpdateListing() {
       setError(false);
       setLoading(true);
 
-      const res = await fetch(`/api/listings/update/${params.listingId}`, {
+      const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(formData),
       });
 
@@ -85,11 +86,13 @@ function UpdateListing() {
       setLoading(false);
 
       if (data.success === false) {
-        
         setError(data.message);
+        return
       }
 
-      navigate(`/listing/${data._id}`)
+      if (data._id) {
+        navigate(`/listing/${data._id}`)
+      }
 
     } catch (err) {
       setError(err.message);

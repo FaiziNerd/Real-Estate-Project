@@ -5,37 +5,42 @@ const listingSchema = new mongoose.Schema({
    name: 
    {
     type: String,
-    require: true
+    required: true
    },
    description:
    {
     type:String,
-    require:true
+    required:true
    },
    address:
    {
     type:String,
-    require: true
+    required: true
    },
-   regularRate:
+   regularPrice:
    {
     type: Number,
-    require: true,
+    required: true,
    },
    discountPrice:
    {
     type: Number,
-    require: true,
+    required: true,
    },
    bedrooms:
    {
     type:Number,
-    require: true
+    required: true
+   },
+   bathrooms:
+   {
+    type:Number,
+    required: true
    },
    furnished:
    {
-    type:Number,
-    reqired: true,
+    type:Boolean,
+    required: true,
    },
    parking:
    {
@@ -67,7 +72,6 @@ const listingSchema = new mongoose.Schema({
 
 
 },{timestamps: true})
-
 
 
 const Listing = mongoose.model('Listing', listingSchema)

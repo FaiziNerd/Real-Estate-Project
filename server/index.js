@@ -19,7 +19,7 @@ const PORT = process.env.PORT
 
 app.use('/api/user',UserRouter)
 app.use('/api/auth', authRouter)
-app.use('api/listing', listingRouter)
+app.use('/api/listing', listingRouter)
 
 
 app.use((err,req,res,next)=>{

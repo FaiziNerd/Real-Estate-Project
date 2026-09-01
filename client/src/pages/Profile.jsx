@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import { useSelector, useDispatch } from "react-redux"
 import { useRef, useState } from "react"
-import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserStart } from "../redux/user/UserSlice"
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signInSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess } from "../redux/user/UserSlice"
 import {Link} from "react-router-dom"
 
 function Profile ()
@@ -84,7 +84,7 @@ function Profile ()
                 )
             }
 
-            console.log("Updated User:", result)
+            dispatch(signInSuccess(result))
         
 
 
@@ -128,17 +128,17 @@ function Profile ()
     {
       try {
         dispatch(signOutUserStart())
-        const res = await fetch(`/api/auth/signout`)
+        const res = await fetch(`/api/auth/sign-out`)
         const data = await res.json()
-        if(data.sucess === false)
+        if(data.success === false)
         {
-            dispatch(deleteUserFailure(data.message))
+            dispatch(signOutUserFailure(data.message))
+            return
         }
 
-        dispatch(deleteUserSuccess(data))
-        return 
+        dispatch(signOutUserSuccess())
       } catch (error) {
-        dispatch(deleteUserFailure(data.message))
+        dispatch(signOutUserFailure(error.message))
       }
     }
 

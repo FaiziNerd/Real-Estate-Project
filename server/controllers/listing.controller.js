@@ -1,8 +1,8 @@
 import Listing from "../models/listing.model.js"
 import { errorhandler } from "../utils/error.js"
 
-
-
+const getAuthUserId = (req) =>
+  (req.userId || req.user?.id || "").toString()
 
 export const createListing = async (req,res,next)=>
 {
@@ -17,7 +17,7 @@ export const createListing = async (req,res,next)=>
 
 export const getUserListings = async (req,res,next)=>
 {
-   if(req.user.id === req.params.id)
+   if(getAuthUserId(req) === req.params.id)
    {
     try {
         const listing = await Listing.find({userRef: req.params.id})
@@ -29,28 +29,28 @@ export const getUserListings = async (req,res,next)=>
 
    else 
    {
-    return next(errorhandler(401, "You can create your listings!!"))
+    return next(errorhandler(401, "You can only view your own listings"))
    }
 }
 
 
 export const deleteuserListings = async (req,res,next) =>
 {
-   const listing = await Listing.findById(req.params.id)
-
-   if(!listing)
-   {
-    return next(errorhandler(404, "Listing not Found"))
-   }
-
-   if(req.user.id !== listing.userRef)
-   {
-    return next(errorhandler(401,"You can delete your own listings"))
-   }
-
    try {
-    await listing.findByIdAndDelete(req.params.id)
+    const listing = await Listing.findById(req.params.id)
 
+    if(!listing)
+    {
+     return next(errorhandler(404, "Listing not Found"))
+    }
+
+    if(getAuthUserId(req) !== listing.userRef.toString())
+    {
+     return next(errorhandler(401,"You can delete your own listings"))
+    }
+
+    await Listing.findByIdAndDelete(req.params.id)
+    return res.status(200).json("Listing has been deleted")
    } catch (error) {
       next(error)
    }
@@ -58,20 +58,20 @@ export const deleteuserListings = async (req,res,next) =>
 
 export const updateuserListings = async (req,res,next)=>
 {
-    const listing = Listing.findById(req.params.id)
-
-    if(!listing)
-    {
-        return next(errorhandler(404, "Listing doesnt exist"))
-    }
-
-    if(req.user.id !== listing.userRef)
-    {
-        return next(errorhandler(401,"You can edit your own listings"))
-    }
-
     try {
-        const updatedListing = Listing.findByIdAndUpdate(
+        const listing = await Listing.findById(req.params.id)
+
+        if(!listing)
+        {
+            return next(errorhandler(404, "Listing doesnt exist"))
+        }
+
+        if(getAuthUserId(req) !== listing.userRef.toString())
+        {
+            return next(errorhandler(401,"You can edit your own listings"))
+        }
+
+        const updatedListing = await Listing.findByIdAndUpdate(
             req.params.id,
             req.body,
             {new: true}
@@ -86,7 +86,7 @@ export const updateuserListings = async (req,res,next)=>
 export const getListing = async (req,res,next) =>
 {
     try {
-        const listing = Listing.findById(req.params.id)
+        const listing = await Listing.findById(req.params.id)
 
         if(!listing)
         {
