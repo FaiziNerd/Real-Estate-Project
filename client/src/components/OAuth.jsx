@@ -32,10 +32,11 @@ function OAuth() {
         })
 
         const data = await res.json()
+        if (!res.ok || data.success === false) {
+            throw new Error(data.message || "Couldn't Sign in with Google")
+        }
         dispatch(signInSuccess(data))
         navigate('/')
-        
-        console.log(data)
 
     } catch (error) {
         console.log("Couldn't Sign in with Google", error)

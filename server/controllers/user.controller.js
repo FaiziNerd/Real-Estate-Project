@@ -50,14 +50,12 @@ export const updateUserInfo =  async (req,res,next) =>
                 process.env.CLOUDINARY_API_KEY &&
                 process.env.CLOUDINARY_API_SECRET
 
-            if (hasCloudinaryConfig) {
-                try {
-                    const result = await uploadToCloudinary(req.file.buffer)
-                    user.avatar = result.secure_url
-                } catch (uploadError) {
-                    console.error("Cloudinary upload failed:", uploadError.message)
-                }
+            if (!hasCloudinaryConfig) {
+                return next(errorhandler(500, 'Image upload is not configured'))
             }
+
+            const result = await uploadToCloudinary(req.file.buffer)
+            user.avatar = result.secure_url
         }
 
 

@@ -13,6 +13,7 @@ function Profile ()
     const [file, setFile] = useState(null)
     const dispatch = useDispatch();
     const [error,setError] = useState('')
+    const [updateSuccess,setUpdateSuccess] = useState(false)
     const [loading,setLoading] = useState(false)
     const [showListingsError,setshowListingsError] = useState(false)
     const [userlistings, setuserlistings] = useState([])
@@ -40,8 +41,12 @@ function Profile ()
         if(!selectedFile) return ;
 
         setFile(selectedFile)
-
-        setfilePreview(URL.createObjectURL(selectedFile))
+        setfilePreview((prev) => {
+            if (prev && prev.startsWith('blob:')) {
+                URL.revokeObjectURL(prev)
+            }
+            return URL.createObjectURL(selectedFile)
+        })
     }
 
 
@@ -51,6 +56,7 @@ function Profile ()
 
      try {
         setError("")
+        setUpdateSuccess(false)
         setLoading(true)
 
         const data = new FormData()
@@ -85,6 +91,12 @@ function Profile ()
             }
 
             dispatch(signInSuccess(result))
+            if (filePreview && filePreview.startsWith('blob:')) {
+                URL.revokeObjectURL(filePreview)
+            }
+            setfilePreview(result.avatar)
+            setFile(null)
+            setUpdateSuccess(true)
         
 
 
@@ -149,7 +161,9 @@ function Profile ()
 
             setshowListingsError(false)
 
-            const res = await fetch(`/api/user/listings/${currentUser._id}`)
+            const res = await fetch(`/api/user/listings/${currentUser._id}`, {
+                credentials: "include",
+            })
             const data = await res.json() 
 
             if(data.success === false)
@@ -170,7 +184,8 @@ function Profile ()
       try {
         const res = await fetch(`/api/listing/delete/${listingId}`,
             {
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'include',
             }
         )
 
@@ -220,6 +235,9 @@ return (
             {error && (
                 <p className="text-red-500">{error}</p>
             )}
+            {updateSuccess && (
+                <p className="text-green-600">Profile updated successfully</p>
+            )}
 
         </form>
 
@@ -242,7 +260,7 @@ return (
 
           <Link to={`/listing/${listing._id}`}>
             <img
-            src={listing.imageUrls[0]} alt="listing cover"
+            src={listing.imageUrls?.[0] || currentUser.avatar} alt="listing cover"
             className="h-16 w-16 object-contain" />
           </Link>
 
