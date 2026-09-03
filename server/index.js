@@ -13,8 +13,11 @@ app.use(express.json())
 app.use(cookieParser())
 ConnectDB()
 
+const PORT = process.env.PORT || 8000
 
-const PORT = process.env.PORT
+app.get('/', (req, res) => {
+    res.status(200).json({ status: 'ok', message: 'API is running' })
+})
 
 app.use('/api/user',UserRouter)
 app.use('/api/auth', authRouter)
@@ -31,10 +34,6 @@ app.use((err,req,res,next)=>{
     })
 })
 
-
-
-
-app.listen(PORT,()=>
-{
-    console.log(`Server is running at http://localhost:${PORT}`)
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`)
 })
