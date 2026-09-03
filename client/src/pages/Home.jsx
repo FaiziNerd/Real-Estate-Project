@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
-import React from 'react'
 import {Link} from 'react-router-dom'
 import {useState, useEffect} from 'react'
 import {Swiper, SwiperSlide} from 'swiper/react'
 import SwiperCore from 'swiper'
-import {Navigation} from 'swiper/modules/navigation'
+import {Navigation} from 'swiper/modules'
 import ListingItem from '../components/ListingItem'
 import 'swiper/css/bundle'
 
@@ -35,7 +33,7 @@ export default function Home()
     const fetchRentListings = async ()=>
     {
       try {
-        const res = await fetch(`/api/listing/get/type=rent&limit=4`)
+        const res = await fetch(`/api/listing/get?type=rent&limit=4`)
         const data = await res.json()
         setrentListings(data)
         fetchSaleListings()
@@ -47,7 +45,7 @@ export default function Home()
     const fetchSaleListings = async()=>
     {
       try {
-        const res = await fetch(`/api/listing/get/type=sell&limit=4`)
+        const res = await fetch(`/api/listing/get?type=sell&limit=4`)
         const data = await res.json()
         setSaleListings(data)
       } catch (error) {
@@ -64,7 +62,7 @@ export default function Home()
          
          {/*top*/}
 
-         <div className='flex flex- gap-6 p-28 max-w-6xl mx-auto'>
+         <div className='flex flex-col gap-6 p-28 max-w-6xl mx-auto'>
 
             <h1 className='text-slate-700 font-bold text-3xl lg:text-6xl'>
               Find your next <span className='text-slate-500'>perfect</span> place with ease
@@ -91,7 +89,7 @@ export default function Home()
             offerListings.map((listing) => (
               <SwiperSlide key={listing._id}>
                 <div
-                  style={{ background: `url(${listing.imageUrls[0]}) center no-repeat`,backgroundSize: "cover" }}
+                  style={{ background: `url(${listing.imageUrls?.[0]}) center no-repeat`,backgroundSize: "cover" }}
                   className='h-[500px]'
                 />
               </SwiperSlide>
@@ -163,7 +161,7 @@ export default function Home()
                     </h2>
 
                     <Link className='text-sm text-blue-600 hover:underline'
-                     to ={'/search?type=sale'}>
+                     to ={'/search?type=sell'}>
                     Show more Places for Sale
                     </Link>
                   </div>

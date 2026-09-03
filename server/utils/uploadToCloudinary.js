@@ -1,12 +1,12 @@
 import cloudinary from "../config/cloudinary.js";
 
 
-export const uploadToCloudinary = (fileBuffer) =>
+export const uploadToCloudinary = (fileBuffer, folder = "avatars") =>
 {
     return new Promise((resolve,reject)=>
     {
         const stream = cloudinary.uploader.upload_stream({
-            folder: "avatars",
+            folder,
         },
         (error,result) =>
         {

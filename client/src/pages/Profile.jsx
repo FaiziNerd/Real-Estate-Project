@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
 import { useSelector, useDispatch } from "react-redux"
 import { useRef, useState } from "react"
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signInSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess } from "../redux/user/UserSlice"
@@ -140,7 +138,9 @@ function Profile ()
     {
       try {
         dispatch(signOutUserStart())
-        const res = await fetch(`/api/auth/sign-out`)
+        const res = await fetch(`/api/auth/sign-out`, {
+          credentials: 'include',
+        })
         const data = await res.json()
         if(data.success === false)
         {
@@ -173,7 +173,7 @@ function Profile ()
             }
 
             setuserlistings(data)
-        } catch (error) {
+        } catch {
             setshowListingsError(true)
         }
     }

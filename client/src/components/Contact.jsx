@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import React from 'react'
 import {useState,useEffect} from 'react'
 import {Link} from 'react-router-dom'
 
@@ -8,7 +6,7 @@ function Contact({listing})
 {
 
     const [landlord,setlandlord] = useState(null)
-    const [message,setmessage] = useState(null)
+    const [message,setmessage] = useState('')
 
     const onChange = (e)=>
     {
@@ -20,7 +18,9 @@ function Contact({listing})
      const fetchLandLord = async() =>
      {
         try {
-            const res = await fetch(`/api/user/${listing.userRef}`)
+            const res = await fetch(`/api/user/${listing.userRef}`, {
+                credentials: 'include',
+            })
             const data = await res.json()
             setlandlord(data)
 
@@ -34,18 +34,16 @@ function Contact({listing})
     <>
     {landlord && (
         <div className='flex flex-col gap-2'>
-           <p>Contact <span className='font-semibold'>{landlord.username} for <span className='font-semibold'>
-            {listing.name.toLowerCase()}</span></span></p>
+           <p>Contact <span className='font-semibold'>{landlord.username}</span> for <span className='font-semibold'>
+            {listing.name.toLowerCase()}</span></p>
             <textarea name="message" id="message"  rows="2"
              value={message} onChange={onChange}
-             placeholder='"Enter your message here' 
+             placeholder='Enter your message here' 
              className='w-full border
              p-3 rounded-lg'></textarea>
 
-             <Link to={`mailto:${landlord.email}?subject=Regarding 
-             ${listing.name}&body=${message}`}
-             className='bg-slate-700' text-white text-center p-3 uppercase
-             rounded-lg hover:opacit-95>Send message</Link>
+             <Link to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
+             className='bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95'>Send message</Link>
         </div>
     )}
     
@@ -57,4 +55,3 @@ function Contact({listing})
 
 
 export default Contact
-

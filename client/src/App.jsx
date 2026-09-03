@@ -1,5 +1,5 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
+ 
+ 
 
 import './App.css'
 import { Route,Routes } from 'react-router-dom'

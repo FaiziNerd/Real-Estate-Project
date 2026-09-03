@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -41,7 +40,7 @@ export default function Listing() {
         setListing(data);
         setLoading(false);
         setError(false);
-      } catch (error) {
+      } catch {
         setError(true);
         setLoading(false);
       }

@@ -1,6 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-import React from 'react'
 import  { signInWithPopup, GoogleAuthProvider,getAuth } from 'firebase/auth'
 import { app } from '../firebase'
 import { useDispatch } from 'react-redux'
@@ -26,6 +23,7 @@ function OAuth() {
                 'Content-type': 'application/json'
 
             },
+            credentials: 'include',
             body: JSON.stringify({name: result.user.displayName, email:result.user.email,
                 photo:result.user.photoURL
             })

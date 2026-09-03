@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -20,10 +19,10 @@ function Header() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search)
-    const searchTermFromUrl = urlParams.get('searchTerm')
-    if (searchTermFromUrl) {
+    const searchTermFromUrl = urlParams.get('searchTerm') || ''
+    queueMicrotask(() => {
       setSearchTerm(searchTermFromUrl)
-    }
+    })
   }, [location.search])
 
   return (

@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect} from 'react';
+import { useState, useEffect} from 'react';
 import {useNavigate, useParams} from 'react-router-dom'
 
 
@@ -61,10 +60,64 @@ function UpdateListing() {
     }
   };
 
+  const handleImageSubmit = async () => {
+    if (files.length < 1) {
+      return setimageUploadError('Please select at least one image');
+    }
+
+    if (files.length + formData.imageUrls.length > 6) {
+      return setimageUploadError('You can only upload a maximum of 6 images per listing');
+    }
+
+    setUploading(true);
+    setimageUploadError(false);
+
+    try {
+      const data = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        data.append('images', files[i]);
+      }
+
+      const res = await fetch('/api/listing/upload', {
+        method: 'POST',
+        credentials: 'include',
+        body: data,
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        setimageUploadError(result.message || 'Image upload failed');
+        setUploading(false);
+        return;
+      }
+
+      setFormData({
+        ...formData,
+        imageUrls: formData.imageUrls.concat(result),
+      });
+      setFiles([]);
+      setUploading(false);
+    } catch (err) {
+      setimageUploadError(err.message || 'Image upload failed');
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveImage = (index) => {
+    setFormData({
+      ...formData,
+      imageUrls: formData.imageUrls.filter((_, i) => i !== index),
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
+    if (formData.imageUrls.length < 1) {
+      return setError('You must upload at least one image');
+    }
+
     if (+formData.regularPrice < +formData.discountPrice) {
       return setError('Discount price must be lower than regular price');
     }
@@ -297,6 +350,7 @@ function UpdateListing() {
 
           <div className="flex gap-4">
             <input
+              onChange={(e) => setFiles(e.target.files)}
               className="p-3 border border-gray-300 rounded w-full"
               type="file"
               id="images"
@@ -305,11 +359,36 @@ function UpdateListing() {
             />
             <button
               type="button"
+              disabled={uploading}
+              onClick={handleImageSubmit}
               className="p-3 text-green-700 border border-green-700 rounded-lg uppercase hover:shadow-lg disabled:opacity-80"
             >
-              Upload
+              {uploading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
+          <p className="text-red-700 text-sm">
+            {imageUploadError && imageUploadError}
+          </p>
+          {formData.imageUrls.length > 0 &&
+            formData.imageUrls.map((url, index) => (
+              <div
+                key={url}
+                className="flex justify-between p-3 border items-center"
+              >
+                <img
+                  src={url}
+                  alt="listing"
+                  className="w-20 h-20 object-contain rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
 
           <button
             disabled={loading || uploading }
