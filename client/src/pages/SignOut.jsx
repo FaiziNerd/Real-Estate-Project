@@ -31,7 +31,14 @@ function SignOut ()
   }, [dispatch, navigate])
 
   return (
-    <p className="text-center my-7 text-2xl">Signing out...</p>
+    <section className="mx-auto max-w-lg px-4 py-16">
+      <div className="surface-card p-8 text-center" aria-live="polite">
+        <h1 className="text-3xl font-semibold">Signing out</h1>
+        <p className="mt-3 text-pretty text-sm text-muted">
+          Clearing your session. You will land on sign in in a moment.
+        </p>
+      </div>
+    </section>
   )
 }
 

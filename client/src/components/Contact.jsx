@@ -1,5 +1,4 @@
 import {useState,useEffect} from 'react'
-import {Link} from 'react-router-dom'
 
 
 function Contact({listing})
@@ -7,6 +6,7 @@ function Contact({listing})
 
     const [landlord,setlandlord] = useState(null)
     const [message,setmessage] = useState('')
+    const [loadError, setLoadError] = useState('')
 
     const onChange = (e)=>
     {
@@ -22,28 +22,33 @@ function Contact({listing})
                 credentials: 'include',
             })
             const data = await res.json()
+            if (!res.ok || data.success === false) {
+              setLoadError('Owner details could not be loaded. Refresh the page and try again.')
+              return
+            }
             setlandlord(data)
 
-        } catch (error) {
-            console.log(error)
+        } catch {
+            setLoadError('Owner details could not be loaded. Check your connection and try again.')
         }
      }
      fetchLandLord()
     },[listing.userRef])
  return(
     <>
+    {loadError && <p className="field-error text-sm" role="alert">{loadError}</p>}
     {landlord && (
         <div className='flex flex-col gap-2'>
-           <p>Contact <span className='font-semibold'>{landlord.username}</span> for <span className='font-semibold'>
-            {listing.name.toLowerCase()}</span></p>
+           <p className="text-pretty">Contact <span className='font-semibold'>{landlord.username}</span> about <span className='font-semibold'>
+            {listing.name}</span></p>
+            <label htmlFor="message" className="field-label">Message</label>
             <textarea name="message" id="message"  rows="2"
              value={message} onChange={onChange}
-             placeholder='Enter your message here' 
-             className='w-full border
-             p-3 rounded-lg'></textarea>
+             placeholder='I would like to tour this home on Saturday…' 
+             className='input-field min-h-24'></textarea>
 
-             <Link to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
-             className='bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95'>Send message</Link>
+             <a href={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
+             className='btn-primary text-center'>Send message</a>
         </div>
     )}
     

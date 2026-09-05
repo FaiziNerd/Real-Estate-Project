@@ -1,52 +1,50 @@
-import { Link } from 'react-router-dom';
-import { MdLocationOn } from 'react-icons/md';
+import { Link } from 'react-router-dom'
+import { PiMapPin } from 'react-icons/pi'
+import UsdAmount from './UsdAmount'
+import SaveHomeButton from './SaveHomeButton'
 
 export default function ListingItem({ listing }) {
+  const price = listing.offer ? listing.discountPrice : listing.regularPrice
+  const cover =
+    listing.imageUrls?.[0] ||
+    'https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/Sales_Blog/real-estate-business-compressor.jpg?width=595&height=400&name=real-estate-business-compressor.jpg'
+
   return (
-    <div className='bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]'>
-      <Link to={`/listing/${listing._id}`}>
-        <img
-          src={
-            listing.imageUrls?.[0] ||
-            'https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/Sales_Blog/real-estate-business-compressor.jpg?width=595&height=400&name=real-estate-business-compressor.jpg'
-          }
-          alt='listing cover'
-          className='h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-300'
-        />
-        <div className='p-3 flex flex-col gap-2 w-full'>
-          <p className='truncate text-lg font-semibold text-slate-700'>
-            {listing.name}
-          </p>
-          <div className='flex items-center gap-1'>
-            <MdLocationOn className='h-4 w-4 text-green-700' />
-            <p className='text-sm text-gray-600 truncate w-full'>
-              {listing.address}
-            </p>
+    <article className="group relative surface-card w-full overflow-clip sm:w-80">
+      <div className="absolute right-3 top-3 z-10">
+        <SaveHomeButton listingId={listing._id} name={listing.name} />
+      </div>
+      <Link to={`/listing/${listing._id}`} className="flex h-full flex-col">
+        <div className="overflow-clip">
+          <img
+            src={cover}
+            alt=""
+            width={660}
+            height={440}
+            loading="lazy"
+            className="listing-cover aspect-video w-full object-cover"
+          />
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-2 p-4">
+          <h3 className="truncate text-lg font-semibold text-ink">{listing.name}</h3>
+          <div className="flex min-w-0 items-center gap-1">
+            <PiMapPin className="h-4 w-4 shrink-0 text-forest" aria-hidden="true" />
+            <p className="min-w-0 truncate text-sm text-muted">{listing.address}</p>
           </div>
-          <p className='text-sm text-gray-600 line-clamp-2'>
-            {listing.description}
+          <p className="line-clamp-2 text-pretty text-sm text-muted">{listing.description}</p>
+          <p className="mt-2 text-base font-semibold text-forest">
+            <UsdAmount value={price} suffix={listing.type === 'rent' ? ' / month' : ''} />
           </p>
-          <p className='text-slate-500 mt-2 font-semibold '>
-            $
-            {listing.offer
-              ? listing.discountPrice.toLocaleString('en-US')
-              : listing.regularPrice.toLocaleString('en-US')}
-            {listing.type === 'rent' && ' / month'}
-          </p>
-          <div className='text-slate-700 flex gap-4'>
-            <div className='font-bold text-xs'>
-              {listing.bedrooms > 1
-                ? `${listing.bedrooms} beds `
-                : `${listing.bedrooms} bed `}
-            </div>
-            <div className='font-bold text-xs'>
-              {listing.bathrooms > 1
-                ? `${listing.bathrooms} baths `
-                : `${listing.bathrooms} bath `}
-            </div>
+          <div className="flex gap-4 text-xs font-semibold text-ink">
+            <span>
+              {listing.bedrooms} {listing.bedrooms > 1 ? 'beds' : 'bed'}
+            </span>
+            <span>
+              {listing.bathrooms} {listing.bathrooms > 1 ? 'baths' : 'bath'}
+            </span>
           </div>
         </div>
       </Link>
-    </div>
-  );
+    </article>
+  )
 }

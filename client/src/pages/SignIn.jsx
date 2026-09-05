@@ -1,97 +1,127 @@
- 
-  import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useDispatch, useSelector  } from "react-redux"
-import { signInStart,signInFailure,signInSuccess } from "../redux/user/UserSlice"
-import OAuth from "../components/OAuth";
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { signInStart, signInFailure, signInSuccess } from '../redux/user/UserSlice'
+import OAuth from '../components/OAuth'
 
-
-  function SignIn()
- {
-
-   const {loading, error} = useSelector((state) => state.user);
+function SignIn() {
+  const { loading, error } = useSelector((state) => state.user)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const[formData,setFormData] = useState({
-    username: "",
-    email: "",
-    password:""
-
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
   })
 
-  function handleChange(e)
-  {
-     setFormData({
+  function handleChange(e) {
+    setFormData({
       ...formData,
-      [e.target.id] : e.target.value
-     })
+      [e.target.id]: e.target.value,
+    })
   }
 
-  async function handlesubmit(e)
-  {
-     e.preventDefault()
+  async function handlesubmit(e) {
+    e.preventDefault()
 
-     try {
+    try {
       dispatch(signInStart())
-     const res = await fetch('/api/auth/sign-in',
-      {
+      const res = await fetch('/api/auth/sign-in', {
         method: 'POST',
-        headers:
-        {
-          'Content-Type' : 'application/json'
-
+        headers: {
+          'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(formData)
-      },
-     
-     )
-     const data = await res.json()
-     if(data.success === false)
-     {
-      dispatch(signInFailure(data.message))
-      return;
-     }
-     dispatch(signInSuccess(data))
-     navigate('/')
+        body: JSON.stringify(formData),
+      })
+      const data = await res.json()
+      if (data.success === false) {
+        dispatch(signInFailure(data.message))
+        return
+      }
+      dispatch(signInSuccess(data))
+      navigate('/')
+    } catch (error) {
+      dispatch(signInFailure(error.message))
     }
-      catch (error) {
-     dispatch(signInFailure(error.message))
-     }
-    
   }
-
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-semibold
-      my-7">Sign In</h1>
-
-      <form onSubmit={handlesubmit} className="flex flex-col gap-2">
-        
-        <input  onChange={handleChange} type="email" placeholder="email" className="border p-3 rounded-lg" id="email" />
-
-        <input onChange={handleChange} type="password" placeholder="password" className="border p-3 rounded-lg" id="password" />
-
-        <button  disabled={loading} className="bg-slate-700 text-white p-3
-        rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
-          {loading ? "Loading!!.." : "SignIn"}</button>
-          <OAuth/>
-      </form>
-
-      <div className="gap-2  mt-5 flex">
-        <p>
-          Dont Have an Account?
+    <div className="mx-auto max-w-lg px-4 py-16">
+      <header className="text-center">
+        <h1 className="text-balance text-3xl font-semibold sm:text-4xl">Sign in</h1>
+        <p className="mt-3 text-pretty text-sm text-muted">
+          Use your email to manage listings and write to owners.
         </p>
-        <Link to = '/sign-up'>
-        <span className="text-blue-800">Sign Up</span>
-        </Link>
+      </header>
+
+      <div className="surface-card mt-8 p-6 sm:p-8">
+        <form onSubmit={handlesubmit} className="flex flex-col gap-4">
+          <div>
+            <label htmlFor="email" className="field-label">
+              Email
+            </label>
+            <input
+              onChange={handleChange}
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              spellCheck={false}
+              placeholder="you@example.com…"
+              className="input-field"
+              id="email"
+              name="email"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="field-label">
+              Password
+            </label>
+            <input
+              onChange={handleChange}
+              type="password"
+              autoComplete="current-password"
+              placeholder="Your password…"
+              className="input-field"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+
+          {error && (
+            <p className="field-error text-sm" role="alert">
+              {error}
+            </p>
+          )}
+
+          <button disabled={loading} className="btn-primary">
+            {loading ? 'Signing in…' : 'Sign in'}
+          </button>
+
+          <div className="relative my-1 flex items-center gap-3">
+            <span className="h-px flex-1 bg-line" aria-hidden="true" />
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted">
+              Or
+            </span>
+            <span className="h-px flex-1 bg-line" aria-hidden="true" />
+          </div>
+
+          <OAuth />
+        </form>
+
+        <p className="mt-6 text-sm text-muted">
+          Need an account?{' '}
+          <Link to="/sign-up" className="font-semibold text-forest hover:underline">
+            Create account
+          </Link>
+        </p>
       </div>
-      {error && <p className="text-red-600 mt-5">{error}</p>  }
     </div>
   )
-  }
+}
 
-
-  export default SignIn
+export default SignIn

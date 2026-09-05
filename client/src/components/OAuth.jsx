@@ -3,6 +3,7 @@ import { app } from '../firebase'
 import { useDispatch } from 'react-redux'
 import { signInSuccess } from '../redux/user/UserSlice'
 import { useNavigate } from 'react-router-dom'
+import { PiGoogleLogo } from 'react-icons/pi'
 function OAuth() {
 
     const dispatch = useDispatch()
@@ -43,8 +44,10 @@ function OAuth() {
  
  
     return (
-    <button   onClick = {handleGoogleClick} type= 'button'className='bg-red-700 text-white
-    p-3 rounded-lg uppercase hover:opacity-95'>Continue with Google</button>
+    <button onClick={handleGoogleClick} type="button" className="btn-secondary gap-2">
+      <PiGoogleLogo className="h-5 w-5" aria-hidden="true" />
+      Continue with Google
+    </button>
   )
 }
 
