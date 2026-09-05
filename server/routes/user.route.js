@@ -1,5 +1,5 @@
 import express from "express"
-import {getUser, test} from "../controllers/user.controller.js"
+import {getUser, test, getSavedHomes, putSavedHomes} from "../controllers/user.controller.js"
 import { verifyToken } from "../utils/verifyUser.js"
 import { updateUserInfo } from "../controllers/user.controller.js"
 import upload from '../middlewares/upload.js'
@@ -14,6 +14,8 @@ router.get('/test',test)
 router.post('/update',verifyToken,upload.single('avatar'),updateUserInfo)
 router.delete('/delete/:id',verifyToken, deleteuser)
 router.get('/listings/:id',verifyToken, getUserListings)
+router.get('/saved', verifyToken, getSavedHomes)
+router.put('/saved', verifyToken, putSavedHomes)
 router.get('/:id', verifyToken,getUser)
 
 export default router

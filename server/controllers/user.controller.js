@@ -1,5 +1,6 @@
  import uploadToCloudinary from '../utils/uploadToCloudinary.js'
  import bcrypt from 'bcrypt'
+ import mongoose from 'mongoose'
  import { errorhandler } from '../utils/error.js'
  import User from '../models/user.model.js'
  
@@ -105,7 +106,41 @@ res.status(200).json(rest)
  } catch (error) {
     next(error)
  }
- 
- 
+}
 
+export const getSavedHomes = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId)
+    if (!user) {
+      return next(errorhandler(404, 'User not Found'))
+    }
+    res.status(200).json({ savedHomes: user.savedHomes || [] })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const putSavedHomes = async (req, res, next) => {
+  try {
+    const listingIds = Array.isArray(req.body.listingIds) ? req.body.listingIds : []
+    const cleaned = [...new Set(
+      listingIds
+        .map((id) => String(id))
+        .filter((id) => mongoose.Types.ObjectId.isValid(id))
+    )].slice(0, 80)
+
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      { savedHomes: cleaned },
+      { new: true }
+    )
+
+    if (!user) {
+      return next(errorhandler(404, 'User not Found'))
+    }
+
+    res.status(200).json({ savedHomes: user.savedHomes || [] })
+  } catch (error) {
+    next(error)
+  }
 }

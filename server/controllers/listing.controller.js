@@ -28,7 +28,8 @@ export const uploadListingImages = async (req, res, next) =>
         const imageUrls = uploads.map((result) => result.secure_url)
         return res.status(200).json(imageUrls)
     } catch (error) {
-        next(error)
+        console.error("Listing image upload failed:", error?.message || error)
+        return next(errorhandler(500, error?.message || "Image upload failed"))
     }
 }
 
