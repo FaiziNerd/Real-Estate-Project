@@ -1,19 +1,58 @@
+import { Link } from 'react-router-dom'
+
 export default function About() {
   return (
-    <div className='py-20 px-4 max-w-6xl mx-auto'>
-      <h1 className='text-3xl font-bold mb-4 text-slate-800'>About FaizanEstate</h1>
-      <p className='mb-4 text-slate-700'>FaizanEstate is a leading real estate agency that specializes in helping clients buy, sell, and rent properties in the most desirable neighborhoods. Our team of experienced
-         agents is dedicated to providing exceptional service and making the buying and
-         selling process as smooth as possible.</p>
-      <p className='mb-4 text-slate-700'>
-      Our mission is to help our clients achieve their real estate goals by providing expert advice, personalized service, and a deep understanding of the local market. Whether you are looking to buy, sell, or rent a property, we are here to help you every step of the way.
+    <article className="mx-auto max-w-[680px] px-4 py-16">
+      <p className="text-sm font-semibold text-forest">About Havenlane</p>
+      <h1 className="hero-heading mt-3 text-4xl font-semibold leading-10">
+        A quieter way
+        <br />
+        to look at homes
+      </h1>
+      <p className="mt-6 text-pretty text-base text-muted">
+        Havenlane is a listing site for people who want to buy, sell, or rent without a noisy
+        marketplace. You search by place, read the details, and write to the owner when a home is
+        worth a visit.
       </p>
-      <p className='mb-4 text-slate-700'>
-        Our team of agents has a wealth of experience and knowledge in the real estate 
-        industry, and we are committed to providing the highest level of service to our
-        clients. We believe that buying or selling a property should be an exciting and
-        rewarding experience, and we are dedicated to making that a reality for each and 
-        every one of our clients.</p>
-    </div>
+      <p className="mt-4 text-pretty text-base text-muted">
+        Owners publish photos, price, beds, baths, parking, and whether the home is furnished.
+        Renters and buyers compare those facts side by side instead of guessing from a single street
+        view.
+      </p>
+
+      <section className="surface-card mt-8 p-6">
+        <h2 className="text-lg font-semibold">What we care about</h2>
+        <ul className="mt-4 flex flex-col gap-3 text-sm text-muted">
+          <li className="flex gap-3">
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-forest" aria-hidden="true" />
+            <span className="text-pretty">Accurate photos that show the real rooms and light.</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-forest" aria-hidden="true" />
+            <span className="text-pretty">Clear prices, with rent or sale marked up front.</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-forest" aria-hidden="true" />
+            <span className="text-pretty">
+              A short path from search to a conversation with the person who posted the home.
+            </span>
+          </li>
+        </ul>
+      </section>
+
+      <p className="mt-6 text-pretty text-base text-muted">
+        The team behind the site lives in the same markets we list. We keep the product calm so the
+        homes stay the focus.
+      </p>
+
+      <div className="mt-8 flex flex-wrap gap-3">
+        <Link to="/search" className="btn-primary">
+          Browse listings
+        </Link>
+        <Link to="/sign-up" className="btn-secondary">
+          Create account
+        </Link>
+      </div>
+    </article>
   )
 }
